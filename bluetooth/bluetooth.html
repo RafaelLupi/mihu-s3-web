@@ -1,0 +1,130 @@
+<!-- web/bluetooth/bluetooth.html -->
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MIHU-S3 — Bluetooth</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./bluetooth.css">
+</head>
+
+<body>
+  <div class="header">
+    <div id="clock">00:00</div>
+    <div class="header-icons" title="Ícones ilustrativos">📶 🔵 🔋</div>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="name">MIHU-S3</div>
+        <div class="sub">Plataforma de Robótica</div>
+      </div>
+
+      <nav class="nav">
+        <a href="/home.html">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 10v10h14V10"/></svg>
+          </span>
+          <span>Home</span>
+        </a>
+
+        <a href="/montagem/montagem.html">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 19a2 2 0 0 0 2 2h14"/><path d="M6 3h14v18H6a2 2 0 0 1 0-4h14"/></svg>
+          </span>
+          <span>Montagens</span>
+        </a>
+
+        <a href="/controle/controle.html">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M7 14h2m-1-1v2"/>
+              <path d="M15 13h0.01M17 15h0.01"/>
+              <path d="M6.5 10.5 5 9.5a2 2 0 0 0-3 1.7v1.3a4 4 0 0 0 4 4h1"/>
+              <path d="M17.5 10.5 19 9.5a2 2 0 0 1 3 1.7v1.3a4 4 0 0 1-4 4h-1"/>
+              <path d="M7 16h10"/>
+            </svg>
+          </span>
+          <span>Controle</span>
+        </a>
+
+        <a href="/bluetooth/bluetooth.html" class="active">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M6 7l12 10-6 4V3l6 4L6 17"/>
+            </svg>
+          </span>
+          <span>Bluetooth</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <div class="top">
+        <div class="title">BLUETOOTH</div>
+        <div class="subtitle">Conecte seu MIHU-S3 e mande comandos em tempo real!</div>
+      </div>
+
+      <div class="main">
+        <div class="card">
+          <div class="grid">
+
+            <!-- Painel A -->
+            <section class="panel">
+              <h3>🔵 Conectar e enviar</h3>
+
+              <div class="chip-row">
+                <div class="chip" title="Estado da conexão">
+                  <span id="dotConn" class="dot bad"></span>
+                  <span id="txtConn">Desconectado</span>
+                </div>
+                <div class="chip" title="Dispositivo selecionado">
+                  <span class="dot dot-neutral" aria-hidden="true"></span>
+                  <span id="txtDevice">Nenhum dispositivo</span>
+                </div>
+              </div>
+
+              <div class="actions">
+                <button id="btnConnect" class="btn btn-primary" type="button">✨ Conectar</button>
+                <button id="btnDisconnect" class="btn btn-danger" type="button" disabled>⛔ Desconectar</button>
+                <button id="btnClear" class="btn btn-soft" type="button">🧹 Limpar console</button>
+              </div>
+
+              <input id="txt" class="input" placeholder="Digite um comando... (ex.: hello / led_on / 123)" />
+
+              <div class="actions" style="margin-top:10px">
+                <button id="btnSend" class="btn btn-primary" type="button" disabled>🚀 Enviar</button>
+                <button id="btnAutoScroll" class="btn btn-soft" type="button" aria-pressed="true" title="Auto-rolagem do console">
+                  📜 Auto-scroll: ON
+                </button>
+              </div>
+
+              <div class="hint">
+                Dica: clique em <b>Conectar</b>, selecione o dispositivo e envie um comando.
+              </div>
+            </section>
+
+            <!-- Painel B -->
+            <section class="panel panel-console">
+              <h3>🧠 Console</h3>
+
+              <div id="log" class="console" role="log" aria-live="polite">Pronto! Clique em "Conectar" para começar.
+</div>
+
+              <div class="hint" style="margin-top:10px">
+                Aqui aparecem as mensagens do ESP32 e as suas mensagens enviadas.
+              </div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="./bluetooth.js"></script>
+</body>
+</html>

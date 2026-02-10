@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MIHU-S3 — Controle</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./controle.css">
+</head>
+
+<body>
+  <div class="header">
+    <div id="clock">00:00</div>
+    <div class="header-icons" title="Ícones ilustrativos">📶 🔵 🔋</div>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="name">MIHU-S3</div>
+        <div class="sub">Plataforma de Robótica</div>
+      </div>
+
+      <nav class="nav">
+        <a href="/home.html">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 10v10h14V10"/></svg>
+          </span>
+          <span>Home</span>
+        </a>
+
+        <a href="/montagem/montagem.html">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 19a2 2 0 0 0 2 2h14"/><path d="M6 3h14v18H6a2 2 0 0 1 0-4h14"/></svg>
+          </span>
+          <span>Montagens</span>
+        </a>
+
+        <a href="/controle/controle.html" class="active">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M7 14h2m-1-1v2"/>
+              <path d="M15 13h0.01M17 15h0.01"/>
+              <path d="M6.5 10.5 5 9.5a2 2 0 0 0-3 1.7v1.3a4 4 0 0 0 4 4h1"/>
+              <path d="M17.5 10.5 19 9.5a2 2 0 0 1 3 1.7v1.3a4 4 0 0 1-4 4h-1"/>
+              <path d="M7 16h10"/>
+            </svg>
+          </span>
+          <span>Controle</span>
+        </a>
+
+        <a href="/bluetooth/bluetooth.html">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M6 7l12 10-6 4V3l6 4L6 17"/>
+            </svg>
+          </span>
+          <span>Bluetooth</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <div class="top">
+        <div class="title">CONTROLE</div>
+        <div class="control-sub">Arraste os analógicos para controlar os motores e escolha a cor do LED</div>
+      </div>
+
+      <section id="gamepad" class="tab gamepad-tab">
+        <div class="gp-wrap">
+          <div class="gp-controller">
+
+            <div class="gp-side gp-left">
+              <div class="gp-dpad" aria-label="D-pad">
+                <button class="gp-btn gp-dpad-up"    type="button" data-dpad="up">▲</button>
+                <button class="gp-btn gp-dpad-left"  type="button" data-dpad="left">◀</button>
+                <button class="gp-btn gp-dpad-mid"   type="button" data-dpad="stop">●</button>
+                <button class="gp-btn gp-dpad-right" type="button" data-dpad="right">▶</button>
+                <button class="gp-btn gp-dpad-down"  type="button" data-dpad="down">▼</button>
+              </div>
+
+              <div class="gp-stick" data-stick="L" aria-label="Analógico esquerdo">
+                <div class="gp-stick-base"></div>
+                <div class="gp-stick-knob"></div>
+                <div class="gp-stick-label">L</div>
+              </div>
+            </div>
+
+            <div class="gp-center">
+              <div class="gp-screen">
+                <div class="gp-screen-top">
+                  <div class="gp-screen-title">Motores</div>
+                  <div style="display:flex; gap:10px; align-items:center;">
+                    <button class="ble-btn" id="bleBtn" type="button">Bluetooth</button>
+                    <span class="ble-pill" id="blePill">OFF</span>
+                    <div class="gp-screen-badge" id="gpMode">TANK</div>
+                  </div>
+                  <div class="gp-screen-actions">
+                    <div class="gp-chip" id="bleChip" title="Status Bluetooth">
+                      <span class="gp-dot" id="bleDot"></span>
+                      <span id="bleText">BLE: OFF</span>
+                    </div>
+                    <button class="gp-mini" id="btnBleConnect" type="button">Conectar</button>
+                    <button class="gp-mini gp-mini-danger" id="btnBleDisconnect" type="button" disabled>Desconectar</button>
+                    <div class="gp-chip" id="bleDeviceChip" title="Dispositivo">
+                      <span class="gp-dot" style="opacity:.6"></span>
+                      <span id="bleDevice">Nenhum</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="gp-lines">
+                  <div class="gp-line">
+                    <div class="gp-line-left">Motor L</div>
+                    <div class="gp-bar"><div class="gp-bar-fill" id="gpBarL"></div></div>
+                    <div class="gp-line-right" id="gpValL">0</div>
+                  </div>
+
+                  <div class="gp-line">
+                    <div class="gp-line-left">Motor R</div>
+                    <div class="gp-bar"><div class="gp-bar-fill" id="gpBarR"></div></div>
+                    <div class="gp-line-right" id="gpValR">0</div>
+                  </div>
+                </div>
+
+                <div class="gp-ledrow">
+                  <div class="gp-ledlabel">RGB</div>
+                  <div class="gp-ledchip" id="gpRgbChip">
+                    <span class="gp-ledswatch" id="gpRgbSwatch"></span>
+                    <span id="gpRgbText">#00AEEF</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="gp-ledpanel">
+                <div class="gp-ledpanel-title">LED do Carrinho</div>
+
+                <div class="gp-ledcontrols">
+                  <input class="gp-color" id="gpColor" type="color" value="#00AEEF" />
+                  <div class="gp-presets">
+                    <button class="gp-preset" data-color="#00AEEF" type="button">Azul</button>
+                    <button class="gp-preset" data-color="#FF00FF" type="button">Roxo</button>
+                    <button class="gp-preset" data-color="#00FF6A" type="button">Verde</button>
+                    <button class="gp-preset" data-color="#FF3B30" type="button">Vermelho</button>
+                    <button class="gp-preset" data-color="#FFD60A" type="button">Amarelo</button>
+                    <button class="gp-preset" data-color="#FFFFFF" type="button">Branco</button>
+                  </div>
+                </div>
+
+                <div class="gp-hint">
+                  Arraste os analógicos para controlar os motores (L e R). Use o seletor de cor para o RGB.
+                </div>
+              </div>
+            </div>
+
+            <div class="gp-side gp-right">
+              <div class="gp-actions" aria-label="Botões de ação">
+                <button class="gp-btn gp-act gp-tri" type="button">△</button>
+                <button class="gp-btn gp-act gp-sq"  type="button">□</button>
+                <button class="gp-btn gp-act gp-cir" type="button">○</button>
+                <button class="gp-btn gp-act gp-x"   type="button">×</button>
+              </div>
+
+              <div class="gp-stick" data-stick="R" aria-label="Analógico direito">
+                <div class="gp-stick-base"></div>
+                <div class="gp-stick-knob"></div>
+                <div class="gp-stick-label">R</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="./controle.js"></script>
+</body>
+</html>
