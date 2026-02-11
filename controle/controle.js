@@ -25,6 +25,9 @@ const ALL_MOTORS = [1, 2, 3, 4];
 const MOTOR_SEND_MIN_MS = 18;
 const MOTOR_SEND_DELTA  = 1;
 
+// (NOVO) LED BLE throttle (para não spammar ao arrastar cor)
+const LED_SEND_MS = 80;
+
 // ==============================
 // UTIL
 // ==============================
@@ -37,6 +40,16 @@ function $(id){ return document.getElementById(id); }
 
 function hasWebBluetooth(){
   return !!(navigator.bluetooth && navigator.bluetooth.requestDevice);
+}
+
+function hexToRgb(hex){
+  hex = (hex || "").trim();
+  if (hex.startsWith("#")) hex = hex.slice(1);
+  if (hex.length === 3) hex = hex.split("").map(c => c + c).join("");
+  if (hex.length !== 6) return { r: 0, g: 0, b: 0 };
+
+  const n = parseInt(hex, 16);
+  return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
 }
 
 // ==============================
@@ -83,6 +96,15 @@ function updateBleUI(on){
 // aceita {"id":1,"speed":50}
 function formatMotorCmd(id, speed){
   return JSON.stringify({ id, speed }) + "\n";
+}
+
+// (NOVO) JSON para LED compatível com parse_and_apply estendido:
+// {"t":"led","on":1,"r":255,"g":0,"b":0}
+function formatLedCmd(payload){
+  const p = payload || {};
+  // garante t:"led" para não conflitar com motores
+  const msg = Object.assign({ t: "led" }, p);
+  return JSON.stringify(msg) + "\n";
 }
 
 async function bleWrite(text){
@@ -210,6 +232,36 @@ async function transportSendMotor(id, speed){
     ble.lastWarnAt = now;
     console.warn("BLE não conectado. Clique em Conectar.");
   }
+}
+
+// ==============================
+// (NOVO) LED VIA BLE (latest-only + throttle)
+// ==============================
+let _ledTimer = null;
+let _ledLastPayload = null;
+
+function queueLedBLE(payload){
+  // guarda o último (latest-only)
+  _ledLastPayload = payload;
+
+  // se já tem timer, não cria outro
+  if (_ledTimer) return;
+
+  _ledTimer = setTimeout(async () => {
+    _ledTimer = null;
+
+    const p = _ledLastPayload;
+    _ledLastPayload = null;
+
+    // se não tiver BLE, só ignora (não quebra UI)
+    if (!ble.connected || !ble.rxChar) return;
+
+    try{
+      await bleWrite(formatLedCmd(p));
+    }catch(e){
+      console.warn("LED BLE falhou:", e);
+    }
+  }, LED_SEND_MS);
 }
 
 // ==============================
@@ -393,7 +445,7 @@ function setupDpad(){
 }
 
 // ==============================
-// RGB (só UI)
+// RGB (UI + LED VIA BLE)
 // ==============================
 function setupRgbUI(){
   const color = $("gpColor");
@@ -404,6 +456,10 @@ function setupRgbUI(){
     if (color) color.value = hex;
     if (sw) sw.style.background = hex;
     if (tx) tx.textContent = hex.toUpperCase();
+
+    // (NOVO) envia LED via BLE
+    const { r, g, b } = hexToRgb(hex);
+    queueLedBLE({ on: 1, r, g, b });
   }
 
   if (color) {
